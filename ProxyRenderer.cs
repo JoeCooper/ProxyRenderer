@@ -132,14 +132,14 @@ public class ProxyRenderer : MonoBehaviour
 
 				var subMeshCount = mesh != null ? mesh.subMeshCount : 0;
 
-				if(canvasRenderersBySubmeshIndex.Count > mesh.subMeshCount)
+				if(canvasRenderersBySubmeshIndex.Count > subMeshCount)
 				{
-					var oldKeys = from key in canvasRenderersBySubmeshIndex.Keys where key >= subMeshCount select key;
+					var oldKeys = (from key in canvasRenderersBySubmeshIndex.Keys where key >= subMeshCount select key).ToArray();
 					foreach(var key in oldKeys)
 					{
 						var canvasRenderer = canvasRenderersBySubmeshIndex[key];
 						canvasRenderersBySubmeshIndex.Remove(key);
-						canvasRenderer.gameObject.SetActive(false);
+						canvasRenderer.Clear();
 						canvasRendererPool.PutObject(canvasRenderer);
 					}
 				}
@@ -151,7 +151,16 @@ public class ProxyRenderer : MonoBehaviour
 				}
 				canvasRenderersBySubmeshIndex.Clear();
 
-				meshRenderer = meshRenderer ?? gameObject.AddComponent<MeshRenderer>();
+				if(meshRenderer == null)
+				{
+					meshRenderer = gameObject.GetComponent<MeshRenderer>();
+				}
+
+				if(meshRenderer == null)
+				{
+					meshRenderer = gameObject.AddComponent<MeshRenderer>();
+				}
+
 				meshRenderer.sharedMaterials = materials;
 			}
 		}
