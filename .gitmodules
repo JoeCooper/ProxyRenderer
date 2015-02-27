@@ -1,0 +1,3 @@
+[submodule "ChangeMonitor"]
+	path = ChangeMonitor
+	url = https://github.com/NobleMuffins/ChangeMonitor.git
